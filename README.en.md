@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="./README.md"><img src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-README-1f6feb?style=flat-square" alt="中文版 README"></a>
+  <a href="./README.zh.md"><img src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-README-1f6feb?style=flat-square" alt="Chinese README"></a>
 </p>
 
 <p align="center">
@@ -60,7 +60,7 @@ It works as an installation and workflow delivery layer for coding agents:
 | Audience | What it solves |
 | --- | --- |
 | User / teammate | Copy one sentence, then reuse mature workflows |
-| Agent | Install capabilities into its own default directories and bridge skills, commands, agents, and runtime setup |
+| Agent | Install capabilities into its own default directories and bridge skills, agents, and runtime setup |
 | Workflow | Turn Yincheng's proven methods into traceable, repeatable, and deliverable runs |
 
 ## Architecture
@@ -122,7 +122,7 @@ Codex
 
 1. Clone or update the repo into `~/.yinch-auto-mkt/repo`
 2. Verify or install the base prerequisites: `git`, `python3`, `python3 -m venv`
-3. Install skills, commands, and agents into the default Claude Code and Codex user directories
+3. Install skills and agents into the default Claude Code and Codex user directories
 4. Run `scripts/check-env.sh`
 
 Business runtime dependencies self-heal on first use:
