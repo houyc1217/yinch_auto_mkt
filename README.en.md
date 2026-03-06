@@ -190,6 +190,14 @@ Health check:
 > [!WARNING]
 > Credentials, cookies, and tokens are never written into repo files or deliverables. Telegram tokens and social connection details should stay in user-local environment storage or external integrations.
 
+## Changelog
+
+- 2026-03-06: Rebuilt the repo into a skill-first framework for Claude Code and Codex, with installer-driven environment repair and default-path setup.
+- 2026-03-06: Added reusable workflows for `x-kol`, `linkedin-post`, `google-review`, `channel-setup`, and `agent-install`.
+- 2026-03-06: Standardized traceable outputs, English-first documentation, and safer handling of runtime-only credentials.
+
+More workflow assets and refinements are already in progress.
+
 ## License
 
 MIT
