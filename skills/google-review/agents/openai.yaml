@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Google Review
+  short_description: Capture Google Maps reviews into reusable review packages.
+  default_prompt: Capture a Google Maps review, save the screenshot or fallback card plus all intermediate artifacts in the current working directory, and return a reusable review package.

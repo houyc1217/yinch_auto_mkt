@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: LinkedIn Post
+  short_description: Draft and optionally publish a NetMind LinkedIn post from source material.
+  default_prompt: Create a LinkedIn post draft from this NetMind source, save the artifacts in my current working directory, and only publish after I approve the draft.

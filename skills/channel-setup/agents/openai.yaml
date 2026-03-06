@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Channel Setup
+  short_description: Set up Telegram and social publishing connectivity without storing secrets in the repo.
+  default_prompt: Help me set up Telegram or social publishing channels for Yinch Auto MKT, write only non-secret local setup files, and tell me exactly what is still missing.

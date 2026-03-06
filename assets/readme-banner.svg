@@ -1,0 +1,45 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" rx="28" fill="#07111F"/>
+  <rect x="28" y="28" width="1224" height="584" rx="26" fill="url(#panel)"/>
+
+  <circle cx="1048" cy="146" r="164" fill="#2563EB" fill-opacity="0.22"/>
+  <circle cx="1020" cy="420" r="208" fill="#06B6D4" fill-opacity="0.16"/>
+  <circle cx="220" cy="94" r="118" fill="#14B8A6" fill-opacity="0.12"/>
+
+  <rect x="84" y="94" width="214" height="42" rx="21" fill="#081428" stroke="#38BDF8" stroke-opacity="0.45"/>
+  <text x="110" y="121" fill="#7DD3FC" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">CLAUDE CODE + CODEX</text>
+
+  <text x="84" y="228" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="74" font-weight="800">Yinch Auto MKT</text>
+  <text x="84" y="286" fill="#BFDBFE" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="30" font-weight="600">Yincheng's workflow framework for reusable operator playbooks.</text>
+
+  <text x="84" y="354" fill="#D1D5DB" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="24">Install once. Then teammates can reuse mature workflows for research,</text>
+  <text x="84" y="390" fill="#D1D5DB" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="24">drafting, review capture, and channel setup without rebuilding runtime.</text>
+
+  <rect x="84" y="454" width="176" height="52" rx="18" fill="#0A172B" stroke="#22C55E" stroke-opacity="0.4"/>
+  <text x="110" y="486" fill="#86EFAC" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">x-kol</text>
+  <text x="170" y="486" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Research</text>
+
+  <rect x="278" y="454" width="214" height="52" rx="18" fill="#0A172B" stroke="#F59E0B" stroke-opacity="0.4"/>
+  <text x="304" y="486" fill="#FCD34D" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">linkedin-post</text>
+  <text x="419" y="486" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Draft</text>
+
+  <rect x="510" y="454" width="232" height="52" rx="18" fill="#0A172B" stroke="#38BDF8" stroke-opacity="0.4"/>
+  <text x="536" y="486" fill="#7DD3FC" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">google-review</text>
+  <text x="670" y="486" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Capture</text>
+
+  <rect x="760" y="454" width="250" height="52" rx="18" fill="#0A172B" stroke="#A78BFA" stroke-opacity="0.42"/>
+  <text x="786" y="486" fill="#C4B5FD" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">channel-setup</text>
+  <text x="936" y="486" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Connect</text>
+
+  <rect x="84" y="530" width="352" height="44" rx="16" fill="#081428" stroke="#94A3B8" stroke-opacity="0.22"/>
+  <text x="108" y="558" fill="#E5E7EB" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="17" font-weight="700">agent-install</text>
+  <text x="224" y="558" fill="#94A3B8" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="17" font-weight="600">default-path install + repair</text>
+
+  <defs>
+    <linearGradient id="panel" x1="62" y1="58" x2="1214" y2="588" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.55" stop-color="#0B1530"/>
+      <stop offset="1" stop-color="#0B3954"/>
+    </linearGradient>
+  </defs>
+</svg>

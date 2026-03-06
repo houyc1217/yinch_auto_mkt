@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Agent Install
+  short_description: Install or repair Yinch Auto MKT for Codex and Claude Code.
+  default_prompt: Install or repair Yinch Auto MKT for the current machine, using the default global directories for Codex and Claude Code and then run a health check.

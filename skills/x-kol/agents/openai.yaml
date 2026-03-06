@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: X KOL Research
+  short_description: Research X KOLs, keep traceable artifacts, and export a strict workbook.
+  default_prompt: Research X KOLs with strict article/post sampling, save all intermediate data under the current working directory, and export a Summary+Details XLSX workbook.
