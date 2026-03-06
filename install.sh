@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${YINCH_AUTO_MKT_REPO_URL:-https://github.com/houyc1217/yinch_mkt_plugins.git}"
+REPO_URL="${YINCH_AUTO_MKT_REPO_URL:-https://github.com/houyc1217/yinch_auto_mkt.git}"
 INSTALL_ROOT="${YINCH_AUTO_MKT_HOME:-$HOME/.yinch-auto-mkt}"
 REPO_DIR="${INSTALL_ROOT}/repo"
 SAFE_MODE=0

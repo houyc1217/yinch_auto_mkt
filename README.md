@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/houyc1217/yinch_mkt_plugins/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
+  <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
   <img src="https://img.shields.io/badge/workflows-5-14b8a6?style=flat-square" alt="Workflows">
@@ -31,7 +31,7 @@
 把下面这句话直接复制给 Claude Code 或 Codex：
 
 ```text
-请安装 Yinch Auto MKT：https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/install.sh 。把 Yinch Auto MKT 安装到你默认的全局目录里并自动修复环境：如果你是 Claude Code，就配置 ~/.claude/skills 和可选 ~/.claude/agents；如果你是 Codex，就配置 ${CODEX_HOME:-~/.codex}/skills；完成后帮我做一次 health check。
+请安装 Yinch Auto MKT：https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/install.sh 。把 Yinch Auto MKT 安装到你默认的全局目录里并自动修复环境：如果你是 Claude Code，就配置 ~/.claude/skills 和可选 ~/.claude/agents；如果你是 Codex，就配置 ${CODEX_HOME:-~/.codex}/skills；完成后帮我做一次 health check。
 ```
 
 > [!TIP]
@@ -150,13 +150,13 @@ yinch-auto-mkt/
 如果不是通过自然语言交给 agent，也可以直接运行：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/install.sh | bash
 ```
 
 更新：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/update.sh | bash
 ```
 
 检查：

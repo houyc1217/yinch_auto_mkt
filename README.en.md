@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/houyc1217/yinch_mkt_plugins/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
+  <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
   <img src="https://img.shields.io/badge/workflows-5-14b8a6?style=flat-square" alt="Workflows">
@@ -31,7 +31,7 @@
 Copy this sentence into Claude Code or Codex:
 
 ```text
-Install Yinch Auto MKT from https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/install.sh . Put it into the default global directories for the current agent and fix the environment automatically: if you are Claude Code, configure ~/.claude/skills and optional ~/.claude/agents; if you are Codex, configure ${CODEX_HOME:-~/.codex}/skills; then run a health check.
+Install Yinch Auto MKT from https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/install.sh . Put it into the default global directories for the current agent and fix the environment automatically: if you are Claude Code, configure ~/.claude/skills and optional ~/.claude/agents; if you are Codex, configure ${CODEX_HOME:-~/.codex}/skills; then run a health check.
 ```
 
 > [!TIP]
@@ -161,13 +161,13 @@ yinch-auto-mkt/
 ## Direct shell usage
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/install.sh | bash
 ```
 
 Update:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_mkt_plugins/main/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/update.sh | bash
 ```
 
 Health check:
