@@ -21,7 +21,7 @@ The goal is simple:
 2. Verify with `scripts/check-env.sh`
 3. Confirm these locations exist:
    - Codex: `${CODEX_HOME:-~/.codex}/skills`
-   - Claude Code: `~/.claude/skills`, `~/.claude/commands`, `~/.claude/agents`
+   - Claude Code: `~/.claude/skills`, optional `~/.claude/agents`
 4. Report the installed paths and any missing system prerequisites
 
 ## Rules

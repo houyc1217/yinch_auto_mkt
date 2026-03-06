@@ -21,7 +21,6 @@ Expected result:
 
 - Claude Code assets exist in:
   - `~/.claude/skills`
-  - `~/.claude/commands`
   - `~/.claude/agents`
 - Codex assets exist in:
   - `${CODEX_HOME:-~/.codex}/skills`
