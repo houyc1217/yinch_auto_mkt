@@ -15,8 +15,8 @@
   <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
-  <img src="https://img.shields.io/badge/workflows-7-14b8a6?style=flat-square" alt="Workflows">
-  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20MD%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
+  <img src="https://img.shields.io/badge/workflows-6-14b8a6?style=flat-square" alt="Workflows">
+  <img src="https://img.shields.io/badge/output-Image%20%2B%20JSON%20%2B%20MD%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
 </p>
 
 <p align="center">
@@ -47,7 +47,6 @@ Install Yinch Auto MKT from https://raw.githubusercontent.com/houyc1217/yinch_au
 | `channel-setup` | Prepare Telegram and X/Instagram publishing setup without storing secrets in the repo | Setup checklist + env template |
 | `agent-install` | Repair or reinstall the complete toolkit integration | Working default installation paths |
 | `reddit-batch-publisher` | Publish one Reddit post batch with image/text fallback, exact body control, live-count backfilling, and editability tracking | Markdown session brief + JSON tracking |
-| `reddit-ops-dashboard` | Analyze Reddit performance, cluster posting waves, and build a batch-first ops dashboard | HTML dashboard + JSON analysis + email draft |
 
 ## Why this repo exists
 
@@ -100,7 +99,6 @@ This repo now follows a `skill-first` design:
 - `channel-setup`
 - `agent-install`
 - `reddit-batch-publisher`
-- `reddit-ops-dashboard`
 
 The goal is not to pile more instructions onto the user. The goal is to package repeatable workflows into agent-callable capabilities.
 
@@ -156,7 +154,6 @@ yinch-auto-mkt/
 │   ├── google-review/
 │   ├── linkedin-post/
 │   ├── reddit-batch-publisher/
-│   ├── reddit-ops-dashboard/
 │   └── x-kol/
 ├── scripts/
 │   ├── check-env.sh
@@ -199,9 +196,6 @@ Health check:
 > [!NOTE]
 > `reddit-batch-publisher` tracks when Reddit stores a post as a non-editable `image` post and marks it for replacement instead of claiming the body was edited.
 
-> [!NOTE]
-> `reddit-ops-dashboard` defaults to a 72-hour batch-first view and keeps `Reply Queue` limited to live unresolved threads.
-
 > [!WARNING]
 > Credentials, cookies, and tokens are never written into repo files or deliverables. Telegram tokens and social connection details should stay in user-local environment storage or external integrations.
 
@@ -211,7 +205,6 @@ Health check:
 - 2026-03-06: Added reusable workflows for `x-kol`, `linkedin-post`, `google-review`, `channel-setup`, and `agent-install`.
 - 2026-03-06: Standardized traceable outputs, English-first documentation, and safer handling of runtime-only credentials.
 - 2026-03-09: Added `reddit-batch-publisher` for exact-body Reddit posting waves, editability tracking, and live-count backfilling.
-- 2026-03-09: Added `reddit-ops-dashboard` for 72-hour Reddit performance review, batch clustering, live-only reply queue management, and reusable HTML dashboard delivery.
 - 2026-03-09: Added a shared Playwright browser runtime and filled missing Claude agent coverage for Reddit workflows.
 
 More workflow assets and refinements are already in progress.

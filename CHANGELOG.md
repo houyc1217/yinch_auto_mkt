@@ -13,24 +13,14 @@ All notable changes to this project will be documented in this file.
 - Environment check script
 - README in Chinese and English
 
-## [1.1.0] - 2026-03-09
-
-### Added
-- Reddit ops dashboard skill for 72-hour Reddit performance review
-- Batch-first Reddit dashboard template asset with bilingual toggle and batch drilldown starter
-- Source rules for `performance/posts`, `performance/comments`, and `performance/account`
-
-### Changed
-- README, README.en, and README.zh now list six workflows and include `reddit-ops-dashboard`
-
 ## [1.2.0] - 2026-03-09
 
 ### Added
 - Reddit batch publisher skill for exact-body post waves, image/text fallback, editability tracking, and live-count backfilling
 - Shared browser runtime bootstrap under `~/.yinch-auto-mkt/runtime/browser`
-- Claude Code agents for `reddit-batch-publisher` and `reddit-ops-dashboard`
+- Claude Code agent for `reddit-batch-publisher`
 
 ### Changed
 - Browser-capable workflow bootstraps now reuse the shared Playwright runtime instead of recreating Chromium per workflow
 - Installer and health checks now account for the shared browser runtime and optional Codex Playwright skills
-- README, README.en, and README.zh now list seven workflows and the shared browser runtime layout
+- README, README.en, and README.zh now list six workflows and the shared browser runtime layout

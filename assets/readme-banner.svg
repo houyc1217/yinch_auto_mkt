@@ -35,13 +35,9 @@
   <text x="100" y="539" fill="#FDBA74" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">reddit-batch-publisher</text>
   <text x="293" y="539" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Publish</text>
 
-  <rect x="352" y="508" width="250" height="50" rx="18" fill="#0A172B" stroke="#14B8A6" stroke-opacity="0.38"/>
-  <text x="376" y="539" fill="#5EEAD4" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">reddit-ops-dashboard</text>
-  <text x="558" y="539" fill="white" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Review</text>
-
-  <rect x="618" y="508" width="256" height="50" rx="18" fill="#0A172B" stroke="#94A3B8" stroke-opacity="0.32"/>
-  <text x="642" y="539" fill="#E2E8F0" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">agent-install</text>
-  <text x="759" y="539" fill="#CBD5E1" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Repair</text>
+  <rect x="352" y="508" width="256" height="50" rx="18" fill="#0A172B" stroke="#94A3B8" stroke-opacity="0.32"/>
+  <text x="376" y="539" fill="#E2E8F0" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">agent-install</text>
+  <text x="493" y="539" fill="#CBD5E1" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18" font-weight="700">Repair</text>
 
   <rect x="902" y="128" width="280" height="244" rx="24" fill="#07111F" stroke="#38BDF8" stroke-opacity="0.24"/>
   <text x="934" y="172" fill="#E0F2FE" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="20" font-weight="700">Shared Browser Runtime</text>
