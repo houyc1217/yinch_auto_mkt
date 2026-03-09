@@ -15,8 +15,8 @@
   <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
-  <img src="https://img.shields.io/badge/workflows-5-14b8a6?style=flat-square" alt="Workflows">
-  <img src="https://img.shields.io/badge/output-JSON%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
+  <img src="https://img.shields.io/badge/workflows-6-14b8a6?style=flat-square" alt="Workflows">
+  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
 </p>
 
 <p align="center">
@@ -46,6 +46,7 @@
 | `google-review` | 抓 Google Maps 公开评论，生成截图或 fallback review card | 图片素材 + Markdown/JSON 包 |
 | `channel-setup` | 准备 Telegram 通知和 X/Instagram 发布所需的非敏感配置 | setup checklist + env template |
 | `agent-install` | 修复或重装整套 Yinch Auto MKT 集成 | 可用的默认安装目录 |
+| `reddit-ops-dashboard` | 分析 Reddit performance，识别发帖波次，并生成 batch-first 运营看板 | HTML 看板 + JSON 分析 + 邮件草稿 |
 
 ## 为什么这个 repo 存在
 
@@ -97,6 +98,7 @@
 - `google-review`
 - `channel-setup`
 - `agent-install`
+- `reddit-ops-dashboard`
 
 目标不是堆说明文档，而是把复杂工作流封装成 agent 可以稳定调用的能力。
 
@@ -136,6 +138,7 @@ yinch-auto-mkt/
 │   ├── channel-setup/
 │   ├── google-review/
 │   ├── linkedin-post/
+│   ├── reddit-ops-dashboard/
 │   └── x-kol/
 ├── scripts/
 │   ├── check-env.sh
@@ -175,6 +178,9 @@ curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/updat
 
 > [!NOTE]
 > `google-review` 优先抓取公开 Google Maps 评论，不默认要求 Google 登录。
+
+> [!NOTE]
+> `reddit-ops-dashboard` 默认按最近 72 小时做 batch-first 视图，并且 `Reply Queue` 只保留仍然 live 且未闭环的线程。
 
 > [!WARNING]
 > 凭证、cookies、token 不会被写进仓库文件或输出物。Telegram token 和社媒连接信息只应保存在用户本地环境或外部集成里。

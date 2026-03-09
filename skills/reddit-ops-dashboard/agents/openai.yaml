@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Reddit Ops Dashboard
+  short_description: Analyze Reddit performance and build a batch-first dashboard.
+  default_prompt: Use $reddit-ops-dashboard to analyze a Reddit account's last 72 hours, group posts into batches, and build or update the HTML ops dashboard.
