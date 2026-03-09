@@ -38,25 +38,29 @@
   <text x="808" y="132" fill="#90A7C6" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="15" font-weight="700">OPERATOR PLAYBOOKS</text>
   <text x="808" y="168" fill="#F8FAFC" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="30" font-weight="700">Built to run like product flows.</text>
 
-  <rect x="802" y="198" width="366" height="70" rx="22" fill="#111C31"/>
-  <rect x="802" y="198" width="8" height="70" rx="4" fill="#34D399"/>
-  <text x="826" y="227" fill="#9AE6B4" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">x-kol</text>
-  <text x="826" y="253" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="18" font-weight="600">strict KOL research with workbook delivery</text>
+  <rect x="802" y="198" width="366" height="78" rx="22" fill="#111C31"/>
+  <rect x="802" y="198" width="8" height="78" rx="4" fill="#34D399"/>
+  <text x="826" y="226" fill="#9AE6B4" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">x-kol</text>
+  <text x="826" y="252" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">strict KOL research</text>
+  <text x="826" y="273" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">with workbook delivery</text>
 
-  <rect x="802" y="282" width="366" height="70" rx="22" fill="#111C31"/>
-  <rect x="802" y="282" width="8" height="70" rx="4" fill="#F59E0B"/>
-  <text x="826" y="311" fill="#FCD34D" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">linkedin-post</text>
-  <text x="826" y="337" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="18" font-weight="600">reviewable draft first, headed publish later</text>
+  <rect x="802" y="286" width="366" height="78" rx="22" fill="#111C31"/>
+  <rect x="802" y="286" width="8" height="78" rx="4" fill="#F59E0B"/>
+  <text x="826" y="314" fill="#FCD34D" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">linkedin-post</text>
+  <text x="826" y="340" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">reviewable draft first</text>
+  <text x="826" y="361" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">headed publish later</text>
 
-  <rect x="802" y="366" width="366" height="70" rx="22" fill="#111C31"/>
-  <rect x="802" y="366" width="8" height="70" rx="4" fill="#38BDF8"/>
-  <text x="826" y="395" fill="#7DD3FC" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">google-review</text>
-  <text x="826" y="421" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="18" font-weight="600">public review capture with fallback assets</text>
+  <rect x="802" y="374" width="366" height="78" rx="22" fill="#111C31"/>
+  <rect x="802" y="374" width="8" height="78" rx="4" fill="#38BDF8"/>
+  <text x="826" y="402" fill="#7DD3FC" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">google-review</text>
+  <text x="826" y="428" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">public review capture</text>
+  <text x="826" y="449" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">with fallback assets</text>
 
-  <rect x="802" y="450" width="366" height="70" rx="22" fill="#111C31"/>
-  <rect x="802" y="450" width="8" height="70" rx="4" fill="#FB7185"/>
-  <text x="826" y="479" fill="#FDA4AF" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">reddit-batch-publisher</text>
-  <text x="826" y="505" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="18" font-weight="600">exact-body posting with live-count backfill</text>
+  <rect x="802" y="462" width="366" height="78" rx="22" fill="#111C31"/>
+  <rect x="802" y="462" width="8" height="78" rx="4" fill="#FB7185"/>
+  <text x="826" y="490" fill="#FDA4AF" font-family="'IBM Plex Mono', 'SFMono-Regular', monospace" font-size="17" font-weight="700">reddit-batch-publisher</text>
+  <text x="826" y="516" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">exact-body posting</text>
+  <text x="826" y="537" fill="#E2E8F0" font-family="'Avenir Next', 'Segoe UI', sans-serif" font-size="16" font-weight="600">with live-count backfill</text>
 
   <defs>
     <linearGradient id="shell" x1="90" y1="48" x2="1204" y2="610" gradientUnits="userSpaceOnUse">
