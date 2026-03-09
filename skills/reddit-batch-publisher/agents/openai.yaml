@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: Reddit Batch Publisher
+  short_description: Publish and maintain a Reddit post batch with live-count tracking and exact body control.
+  default_prompt: Publish a Reddit post batch, keep the canonical body exact across edits and reposts, track live-vs-removed outcomes, and save all artifacts under the current working directory.

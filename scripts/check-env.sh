@@ -18,7 +18,9 @@ fi
 
 CLAUDE_DIR="${CLAUDE_HOME:-$HOME/.claude}"
 CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
+BROWSER_RUNTIME_DIR="${YINCH_AUTO_MKT_HOME:-$HOME/.yinch-auto-mkt}/runtime/browser"
 FAILURES=0
+WARNINGS=0
 
 check_path() {
   local label="$1"
@@ -41,6 +43,23 @@ check_cmd() {
   fi
 }
 
+warn_optional() {
+  local label="$1"
+  local detail="$2"
+  printf '[warn] %s: %s\n' "${label}" "${detail}" >&2
+  WARNINGS=$((WARNINGS + 1))
+}
+
+check_optional_path() {
+  local label="$1"
+  local path="$2"
+  if [[ -e "${path}" ]]; then
+    printf '[ok] %s: %s\n' "${label}" "${path}"
+  else
+    warn_optional "${label}" "${path}"
+  fi
+}
+
 main() {
   check_cmd git
   check_cmd python3
@@ -58,11 +77,26 @@ main() {
     check_path "claude agent ${agent_name}" "${CLAUDE_DIR}/agents/${agent_name}"
   done
 
+  check_optional_path "shared browser runtime" "${BROWSER_RUNTIME_DIR}/venv/bin/python"
+  if [[ -x "${BROWSER_RUNTIME_DIR}/venv/bin/python" ]]; then
+    if "${BROWSER_RUNTIME_DIR}/venv/bin/python" -c "import openpyxl, playwright, requests" >/dev/null 2>&1; then
+      printf '[ok] shared browser runtime imports: requests, openpyxl, playwright\n'
+    else
+      warn_optional "shared browser runtime imports" "requests, openpyxl, or playwright unavailable"
+    fi
+  fi
+  check_optional_path "codex optional playwright skill" "${CODEX_DIR}/skills/playwright"
+  check_optional_path "codex optional playwright-interactive skill" "${CODEX_DIR}/skills/playwright-interactive"
+
   if [[ ${FAILURES} -gt 0 ]]; then
     printf '\nEnvironment check failed with %s missing item(s).\n' "${FAILURES}" >&2
     exit 1
   fi
-  printf '\nEnvironment check passed.\n'
+  if [[ ${WARNINGS} -gt 0 ]]; then
+    printf '\nEnvironment check passed with %s optional warning(s).\n' "${WARNINGS}"
+  else
+    printf '\nEnvironment check passed.\n'
+  fi
 }
 
 main "$@"

@@ -4,34 +4,15 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 OUTPUT_ROOT="${PWD}/yinch-auto-mkt-output/linkedin-post"
 RUNTIME_ROOT="${OUTPUT_ROOT}/.runtime"
-VENV_DIR="${RUNTIME_ROOT}/venv"
-PYTHON_BIN="${PYTHON_BIN:-python3}"
+BOOTSTRAP_REPORT="${RUNTIME_ROOT}/dependency-bootstrap.json"
 
 mkdir -p "${RUNTIME_ROOT}"
 
-if [[ ! -d "${VENV_DIR}" ]]; then
-  "${PYTHON_BIN}" -m venv "${VENV_DIR}"
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "[linkedin-post] python3 is required" >&2
+  exit 1
 fi
 
-source "${VENV_DIR}/bin/activate"
+eval "$("${ROOT_DIR}/scripts/ensure-browser-runtime.sh" --report "${BOOTSTRAP_REPORT}")"
 
-python -m pip install --upgrade pip >/dev/null
-python -m pip install requests openpyxl playwright >/dev/null
-python -m playwright install chromium >/dev/null
-
-python - <<'PY' "${RUNTIME_ROOT}"
-import json
-import platform
-import sys
-from pathlib import Path
-
-runtime_root = Path(sys.argv[1])
-report = {
-    "python": sys.version.split()[0],
-    "platform": platform.platform(),
-    "dependencies": ["requests", "openpyxl", "playwright"],
-}
-(runtime_root / "dependency-bootstrap.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-PY
-
-exec python "${ROOT_DIR}/skills/linkedin-post/scripts/run_linkedin_post.py" "$@"
+exec "${YINCH_BROWSER_PYTHON_BIN}" "${ROOT_DIR}/skills/linkedin-post/scripts/run_linkedin_post.py" "$@"

@@ -15,8 +15,8 @@
   <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
-  <img src="https://img.shields.io/badge/workflows-6-14b8a6?style=flat-square" alt="Workflows">
-  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
+  <img src="https://img.shields.io/badge/workflows-7-14b8a6?style=flat-square" alt="Workflows">
+  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20MD%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
 </p>
 
 <p align="center">
@@ -46,6 +46,7 @@ Install Yinch Auto MKT from https://raw.githubusercontent.com/houyc1217/yinch_au
 | `google-review` | Capture a public Google Maps review as a screenshot or fallback review card | Image asset + Markdown/JSON package |
 | `channel-setup` | Prepare Telegram and X/Instagram publishing setup without storing secrets in the repo | Setup checklist + env template |
 | `agent-install` | Repair or reinstall the complete toolkit integration | Working default installation paths |
+| `reddit-batch-publisher` | Publish one Reddit post batch with image/text fallback, exact body control, live-count backfilling, and editability tracking | Markdown session brief + JSON tracking |
 | `reddit-ops-dashboard` | Analyze Reddit performance, cluster posting waves, and build a batch-first ops dashboard | HTML dashboard + JSON analysis + email draft |
 
 ## Why this repo exists
@@ -98,14 +99,16 @@ This repo now follows a `skill-first` design:
 - `google-review`
 - `channel-setup`
 - `agent-install`
+- `reddit-batch-publisher`
 - `reddit-ops-dashboard`
 
 The goal is not to pile more instructions onto the user. The goal is to package repeatable workflows into agent-callable capabilities.
 
-### Runtime self-healing
+### Shared browser runtime
 
-- create a local venv only when a workflow actually runs
-- install Python packages and Playwright on demand
+- prime a shared browser runtime during install under `~/.yinch-auto-mkt/runtime/browser`
+- reuse that runtime for Playwright-based workflows instead of reinstalling Chromium per workflow
+- let each workflow keep traceable run artifacts under the user's current working directory
 - reuse login only at runtime, never persist credentials into repo files or deliverables
 
 ## Default compatibility targets
@@ -124,13 +127,14 @@ Codex
 
 1. Clone or update the repo into `~/.yinch-auto-mkt/repo`
 2. Verify or install the base prerequisites: `git`, `python3`, `python3 -m venv`
-3. Install skills and agents into the default Claude Code and Codex user directories
-4. Run `scripts/check-env.sh`
+3. Prime the shared Playwright browser runtime for headed workflows
+4. Install skills and agents into the default Claude Code and Codex user directories
+5. Run `scripts/check-env.sh`
 
-Business runtime dependencies self-heal on first use:
+Business runtime dependencies remain traceable after install:
 
-- local runtime venv under the user's current working directory
-- Python packages and Playwright browser installed on demand
+- shared browser runtime under `~/.yinch-auto-mkt/runtime/browser`
+- current-working-directory run outputs under `./yinch-auto-mkt-output/...`
 - runtime login reuse only; no credentials written into repo files or output artifacts
 
 ## How to use it after install
@@ -151,10 +155,12 @@ yinch-auto-mkt/
 │   ├── channel-setup/
 │   ├── google-review/
 │   ├── linkedin-post/
+│   ├── reddit-batch-publisher/
 │   ├── reddit-ops-dashboard/
 │   └── x-kol/
 ├── scripts/
 │   ├── check-env.sh
+│   ├── ensure-browser-runtime.sh
 │   ├── install-agent-assets.sh
 │   └── install-deps.sh
 ├── install.sh
@@ -191,6 +197,9 @@ Health check:
 > `google-review` prefers public Google Maps review capture and does not require Google login by default.
 
 > [!NOTE]
+> `reddit-batch-publisher` tracks when Reddit stores a post as a non-editable `image` post and marks it for replacement instead of claiming the body was edited.
+
+> [!NOTE]
 > `reddit-ops-dashboard` defaults to a 72-hour batch-first view and keeps `Reply Queue` limited to live unresolved threads.
 
 > [!WARNING]
@@ -201,7 +210,9 @@ Health check:
 - 2026-03-06: Rebuilt the repo into a skill-first framework for Claude Code and Codex, with installer-driven environment repair and default-path setup.
 - 2026-03-06: Added reusable workflows for `x-kol`, `linkedin-post`, `google-review`, `channel-setup`, and `agent-install`.
 - 2026-03-06: Standardized traceable outputs, English-first documentation, and safer handling of runtime-only credentials.
+- 2026-03-09: Added `reddit-batch-publisher` for exact-body Reddit posting waves, editability tracking, and live-count backfilling.
 - 2026-03-09: Added `reddit-ops-dashboard` for 72-hour Reddit performance review, batch clustering, live-only reply queue management, and reusable HTML dashboard delivery.
+- 2026-03-09: Added a shared Playwright browser runtime and filled missing Claude agent coverage for Reddit workflows.
 
 More workflow assets and refinements are already in progress.
 

@@ -3,6 +3,7 @@ set -euo pipefail
 
 SAFE_MODE=0
 OS="$(uname -s)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -70,9 +71,19 @@ ensure_git() {
   fi
 }
 
+ensure_browser_runtime() {
+  if [[ ${SAFE_MODE} -eq 1 ]]; then
+    warn "Skipping shared browser runtime bootstrap in safe mode."
+    return 0
+  fi
+  log "Bootstrapping shared browser runtime"
+  "${SCRIPT_DIR}/ensure-browser-runtime.sh" >/dev/null
+}
+
 main() {
   ensure_git
   ensure_python
+  ensure_browser_runtime
   log "Dependency bootstrap complete"
 }
 

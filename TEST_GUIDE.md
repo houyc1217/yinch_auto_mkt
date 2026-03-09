@@ -28,11 +28,25 @@ Expected result:
 ## 2. Shell validation
 
 ```bash
-bash -n install.sh update.sh scripts/*.sh skills/x-kol/scripts/bootstrap_runtime.sh skills/linkedin-post/scripts/bootstrap_runtime.sh
-python3 -m py_compile skills/x-kol/scripts/run_x_kol.py skills/linkedin-post/scripts/run_linkedin_post.py
+bash -n install.sh update.sh scripts/*.sh \
+  skills/google-review/scripts/bootstrap_runtime.sh \
+  skills/linkedin-post/scripts/bootstrap_runtime.sh \
+  skills/reddit-batch-publisher/scripts/bootstrap_runtime.sh \
+  skills/x-kol/scripts/bootstrap_runtime.sh
+python3 -m py_compile \
+  skills/google-review/scripts/run_google_review.py \
+  skills/linkedin-post/scripts/run_linkedin_post.py \
+  skills/reddit-batch-publisher/scripts/run_reddit_batch_publisher.py \
+  skills/x-kol/scripts/run_x_kol.py
 ```
 
 ## 3. Runtime smoke tests
+
+Shared browser runtime bootstrap:
+
+```bash
+./scripts/ensure-browser-runtime.sh --output json >/tmp/yinch-auto-mkt-browser-runtime.json
+```
 
 LinkedIn draft:
 
@@ -44,11 +58,21 @@ python3 skills/linkedin-post/scripts/run_linkedin_post.py \
 
 X KOL flow:
 
-Use the skill bootstrap wrapper so runtime dependencies self-heal:
+Use the skill bootstrap wrapper so the shared browser runtime is reused:
 
 ```bash
 skills/x-kol/scripts/bootstrap_runtime.sh \
   --mode account_list \
   --targets @DataChaz \
   --product-context "NetMind Arena"
+```
+
+Reddit batch publisher scaffold:
+
+```bash
+skills/reddit-batch-publisher/scripts/bootstrap_runtime.sh \
+  --title "Smoke Test Reddit Batch" \
+  --body "Smoke test body." \
+  --subreddit testingground4bots \
+  --target-count 1
 ```

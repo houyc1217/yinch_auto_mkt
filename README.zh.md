@@ -15,8 +15,8 @@
   <a href="https://github.com/houyc1217/yinch_auto_mkt/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude%20Code-ready-0ea5e9?style=flat-square" alt="Claude Code Ready">
   <img src="https://img.shields.io/badge/Codex-ready-2563eb?style=flat-square" alt="Codex Ready">
-  <img src="https://img.shields.io/badge/workflows-6-14b8a6?style=flat-square" alt="Workflows">
-  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
+  <img src="https://img.shields.io/badge/workflows-7-14b8a6?style=flat-square" alt="Workflows">
+  <img src="https://img.shields.io/badge/output-HTML%20%2B%20JSON%20%2B%20MD%20%2B%20XLSX-f59e0b?style=flat-square" alt="Output">
 </p>
 
 <p align="center">
@@ -46,6 +46,7 @@
 | `google-review` | 抓 Google Maps 公开评论，生成截图或 fallback review card | 图片素材 + Markdown/JSON 包 |
 | `channel-setup` | 准备 Telegram 通知和 X/Instagram 发布所需的非敏感配置 | setup checklist + env template |
 | `agent-install` | 修复或重装整套 Yinch Auto MKT 集成 | 可用的默认安装目录 |
+| `reddit-batch-publisher` | 批量发 Reddit 帖子，支持 image/text fallback、正文精确一致、live 数补齐和可编辑性追踪 | Markdown session brief + JSON tracking |
 | `reddit-ops-dashboard` | 分析 Reddit performance，识别发帖波次，并生成 batch-first 运营看板 | HTML 看板 + JSON 分析 + 邮件草稿 |
 
 ## 为什么这个 repo 存在
@@ -98,14 +99,16 @@
 - `google-review`
 - `channel-setup`
 - `agent-install`
+- `reddit-batch-publisher`
 - `reddit-ops-dashboard`
 
 目标不是堆说明文档，而是把复杂工作流封装成 agent 可以稳定调用的能力。
 
-### 运行时自修复
+### 共享浏览器 runtime
 
-- 首次执行业务 workflow 时，再按需创建本地 venv
-- 再按需安装 Python 包和 Playwright
+- 安装时先预热共享浏览器 runtime，位置在 `~/.yinch-auto-mkt/runtime/browser`
+- Playwright 类 workflow 复用这套 runtime，而不是每个 workflow 都重新装 Chromium
+- 每个 workflow 继续把可追溯产物写到用户当前工作目录
 - 登录态只在运行时复用，不写进仓库和输出物
 
 ## 默认兼容方式
@@ -124,6 +127,12 @@ Codex
 
 安装完成后，用户直接自然语言使用即可。Claude Code 和 Codex 都以已安装的 `skills` 作为主入口。
 
+运行时依赖会保持可追踪：
+
+- 共享浏览器 runtime 在 `~/.yinch-auto-mkt/runtime/browser`
+- 每次运行的产物在 `./yinch-auto-mkt-output/...`
+- 登录态仍然只在运行时复用，不写进 repo 或输出物
+
 ## Repo 结构
 
 ```text
@@ -138,10 +147,12 @@ yinch-auto-mkt/
 │   ├── channel-setup/
 │   ├── google-review/
 │   ├── linkedin-post/
+│   ├── reddit-batch-publisher/
 │   ├── reddit-ops-dashboard/
 │   └── x-kol/
 ├── scripts/
 │   ├── check-env.sh
+│   ├── ensure-browser-runtime.sh
 │   ├── install-agent-assets.sh
 │   └── install-deps.sh
 ├── install.sh
@@ -178,6 +189,9 @@ curl -fsSL https://raw.githubusercontent.com/houyc1217/yinch_auto_mkt/main/updat
 
 > [!NOTE]
 > `google-review` 优先抓取公开 Google Maps 评论，不默认要求 Google 登录。
+
+> [!NOTE]
+> `reddit-batch-publisher` 会识别 Reddit 把帖子保存成不可编辑的 `image` post 的情况，这时会标记为需要替换 / 重发，而不是假装已经改过正文。
 
 > [!NOTE]
 > `reddit-ops-dashboard` 默认按最近 72 小时做 batch-first 视图，并且 `Reply Queue` 只保留仍然 live 且未闭环的线程。

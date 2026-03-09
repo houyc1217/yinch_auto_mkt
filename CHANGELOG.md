@@ -22,3 +22,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - README, README.en, and README.zh now list six workflows and include `reddit-ops-dashboard`
+
+## [1.2.0] - 2026-03-09
+
+### Added
+- Reddit batch publisher skill for exact-body post waves, image/text fallback, editability tracking, and live-count backfilling
+- Shared browser runtime bootstrap under `~/.yinch-auto-mkt/runtime/browser`
+- Claude Code agents for `reddit-batch-publisher` and `reddit-ops-dashboard`
+
+### Changed
+- Browser-capable workflow bootstraps now reuse the shared Playwright runtime instead of recreating Chromium per workflow
+- Installer and health checks now account for the shared browser runtime and optional Codex Playwright skills
+- README, README.en, and README.zh now list seven workflows and the shared browser runtime layout
