@@ -102,6 +102,8 @@ contains_name() {
 prune_removed_assets() {
   local previous_skill
   local previous_agent
+  local target
+  local target_name
 
   if [[ "${AGENT_MODE}" == "codex" || "${AGENT_MODE}" == "both" || "${AGENT_MODE}" == "auto" ]]; then
     while IFS= read -r previous_skill; do
@@ -110,6 +112,16 @@ prune_removed_assets() {
         remove_path "${CODEX_DIR}/skills/${previous_skill}"
       fi
     done < <(manifest_items codex_skills)
+
+    for target in "${CODEX_DIR}"/skills/*; do
+      [[ -L "${target}" ]] || continue
+      if [[ "$(readlink "${target}")" == "${REPO_DIR}/skills/"* ]]; then
+        target_name="$(basename "${target}")"
+        if ! contains_name "${target_name}" "${REPO_SKILLS[@]}"; then
+          remove_path "${target}"
+        fi
+      fi
+    done
   fi
 
   if [[ "${AGENT_MODE}" == "claude" || "${AGENT_MODE}" == "both" || "${AGENT_MODE}" == "auto" ]]; then
@@ -126,6 +138,26 @@ prune_removed_assets() {
         remove_path "${CLAUDE_DIR}/agents/${previous_agent}"
       fi
     done < <(manifest_items claude_agents)
+
+    for target in "${CLAUDE_DIR}"/skills/*; do
+      [[ -L "${target}" ]] || continue
+      if [[ "$(readlink "${target}")" == "${REPO_DIR}/skills/"* ]]; then
+        target_name="$(basename "${target}")"
+        if ! contains_name "${target_name}" "${REPO_SKILLS[@]}"; then
+          remove_path "${target}"
+        fi
+      fi
+    done
+
+    for target in "${CLAUDE_DIR}"/agents/*; do
+      [[ -L "${target}" ]] || continue
+      if [[ "$(readlink "${target}")" == "${REPO_DIR}/.claude/agents/"* ]]; then
+        target_name="$(basename "${target}")"
+        if ! contains_name "${target_name}" "${REPO_AGENTS[@]}"; then
+          remove_path "${target}"
+        fi
+      fi
+    done
   fi
 }
 
