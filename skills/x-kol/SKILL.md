@@ -89,8 +89,9 @@ See references for details:
 
 ## Runtime Rules
 
-- Prefer logged-in X collection when available
-- Fall back to guest/public collection when acceptable
+- Prefer logged-in X collection when available, even when guest collection already has 20 valid items
+- When logged-in `UserTweets` GraphQL is rate-limited or the profile timeline is unstable, automatically fall back to logged-in X search DOM collection using `from:<handle> -filter:replies -filter:retweets`
+- Use guest/public collection only after logged-in GraphQL and logged-in search DOM fallbacks are exhausted
 - Record `source_used` per KOL
 - Do not silently downgrade strict filtering
 - Omit KOLs with fewer than 20 valid strict posts unless the user explicitly requests partial output

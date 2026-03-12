@@ -4,6 +4,7 @@ import json
 import platform
 import re
 import statistics
+import subprocess
 import sys
 import tempfile
 import time
@@ -533,7 +534,53 @@ def maybe_launch_browser(headed: bool, browser_profile: Optional[str]) -> Option
     return p, context
 
 
+def infer_auth_state_path(browser_profile: Optional[str]) -> Optional[Path]:
+    if not browser_profile:
+        return None
+    profile_path = Path(browser_profile).resolve()
+    candidates = [
+        profile_path.parent.parent / "x-auth-state-MKT.json",
+        profile_path.parent / "x-auth-state-MKT.json",
+        profile_path / "x-auth-state-MKT.json",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def build_session_from_auth_state(bearer_token: str, auth_state_path: Path) -> Optional[requests.Session]:
+    try:
+        payload = json.loads(auth_state_path.read_text())
+    except Exception:
+        return None
+    cookies = payload.get("cookies") or []
+    session = requests.Session()
+    session.headers.update(
+        {
+            "authorization": f"Bearer {bearer_token}",
+            "x-twitter-active-user": "yes",
+            "x-twitter-client-language": "en",
+            "user-agent": "Mozilla/5.0",
+            "referer": "https://x.com/",
+        }
+    )
+    for cookie in cookies:
+        session.cookies.set(cookie["name"], cookie["value"], domain=cookie.get("domain"), path=cookie.get("path"))
+        if cookie["name"] == "ct0":
+            session.headers["x-csrf-token"] = cookie["value"]
+            session.headers["x-twitter-auth-type"] = "OAuth2Session"
+    if "x-csrf-token" not in session.headers:
+        return None
+    return session
+
+
 def build_authenticated_session(bearer_token: str, headed: bool, browser_profile: Optional[str]) -> Optional[requests.Session]:
+    auth_state_path = infer_auth_state_path(browser_profile)
+    if auth_state_path:
+        session = build_session_from_auth_state(bearer_token, auth_state_path)
+        if session is not None:
+            return session
     if sync_playwright is None:
         return None
     launched = maybe_launch_browser(headed=headed, browser_profile=browser_profile)
@@ -573,6 +620,175 @@ def build_authenticated_session(bearer_token: str, headed: bool, browser_profile
         return session
     finally:
         context.close()
+        p.stop()
+
+
+def browser_gql_fetch(page: Any, bearer_token: str, op_id: str, op_name: str, variables: Dict[str, Any], features: Dict[str, Any], field_toggles: Dict[str, Any]) -> Dict[str, Any]:
+    result = page.evaluate(
+        """
+        async ({ bearerToken, opId, opName, variables, features, fieldToggles }) => {
+          const ct0 = document.cookie
+            .split('; ')
+            .find((part) => part.startsWith('ct0='))
+            ?.split('=')
+            .slice(1)
+            .join('=') || '';
+          const params = new URLSearchParams({
+            variables: JSON.stringify(variables),
+            features: JSON.stringify(features),
+            fieldToggles: JSON.stringify(fieldToggles),
+          });
+          const response = await fetch(`https://x.com/i/api/graphql/${opId}/${opName}?${params.toString()}`, {
+            credentials: 'include',
+            headers: {
+              'authorization': `Bearer ${bearerToken}`,
+              'x-csrf-token': ct0,
+              'x-twitter-active-user': 'yes',
+              'x-twitter-auth-type': 'OAuth2Session',
+              'x-twitter-client-language': 'en',
+            },
+          });
+          return {
+            status: response.status,
+            text: await response.text(),
+          };
+        }
+        """,
+        {
+            "bearerToken": bearer_token,
+            "opId": op_id,
+            "opName": op_name,
+            "variables": variables,
+            "features": features,
+            "fieldToggles": field_toggles,
+        },
+    )
+    status = result["status"]
+    body = result["text"]
+    if status >= 400:
+        raise SkillError(f"browser_graphql_http_{status}:{body[:500]}")
+    data = json.loads(body)
+    if "errors" in data:
+        raise SkillError(json.dumps(data["errors"], ensure_ascii=False))
+    return data
+
+
+def collect_search_candidates_via_subprocess(handle: str, browser_profile: Optional[str]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    auth_state_path = infer_auth_state_path(browser_profile)
+    if auth_state_path is None:
+        raise SkillError("browser_auth_state_unavailable")
+    script_path = Path(__file__).with_name("x_search_dom_fallback.py")
+    runtime_python = Path.home() / ".yinch-auto-mkt" / "runtime" / "browser" / "venv" / "bin" / "python"
+    python_executable = str(runtime_python) if runtime_python.exists() else sys.executable
+    result = subprocess.run(
+        [python_executable, str(script_path), "--handle", handle, "--auth-state", str(auth_state_path)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(result.stdout)
+    return payload["candidates"], payload["raw_pages"]
+
+
+def collect_authenticated_candidates_via_browser(
+    bearer_token: str,
+    ops: Dict[str, str],
+    handle: str,
+    headed: bool,
+    browser_profile: Optional[str],
+    max_pages: int = 60,
+) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
+    auth_state_path = infer_auth_state_path(browser_profile)
+    if sync_playwright is None or auth_state_path is None:
+        raise SkillError("browser_auth_state_unavailable")
+    p = sync_playwright().start()
+    browser = p.chromium.launch(headless=not headed, channel="chrome")
+    context = browser.new_context(
+        storage_state=str(auth_state_path),
+        viewport={"width": 1440, "height": 960},
+        user_agent="Mozilla/5.0",
+    )
+    try:
+        page = context.new_page()
+        page.goto("https://x.com/home", wait_until="domcontentloaded", timeout=60000)
+        page.wait_for_timeout(2500)
+        if "login" in page.url:
+            raise SkillError("browser_auth_state_redirected_to_login")
+
+        profile_data = browser_gql_fetch(
+            page,
+            bearer_token,
+            ops["UserByScreenName"],
+            "UserByScreenName",
+            {"screen_name": handle, "withSafetyModeUserFields": True},
+            USER_BY_SCREEN_NAME_FEATURES,
+            USER_BY_SCREEN_NAME_FIELD_TOGGLES,
+        )
+        profile = profile_data["data"]["user"]["result"]
+        user_id = profile["rest_id"]
+
+        candidates: List[Dict[str, Any]] = []
+        raw_pages: List[Dict[str, Any]] = []
+        seen = set()
+        cursor = None
+
+        try:
+            for page_no in range(1, max_pages + 1):
+                variables: Dict[str, Any] = {
+                    "userId": user_id,
+                    "count": 100,
+                    "includePromotedContent": False,
+                    "withQuickPromoteEligibilityTweetFields": True,
+                    "withVoice": True,
+                    "withV2Timeline": True,
+                }
+                if cursor:
+                    variables["cursor"] = cursor
+                data = browser_gql_fetch(
+                    page,
+                    bearer_token,
+                    ops["UserTweets"],
+                    "UserTweets",
+                    variables,
+                    USER_TWEETS_FEATURES,
+                    USER_TWEETS_FIELD_TOGGLES,
+                )
+                entries = extract_entries(data)
+                raw_pages.append(
+                    {
+                        "page": page_no,
+                        "entry_count": len(entries),
+                        "entry_ids": [entry.get("entryId") for entry in entries[:15]],
+                        "source": "logged_in_x_browser_graphql",
+                    }
+                )
+                for entry in entries:
+                    item = (entry.get("content") or {}).get("itemContent") or {}
+                    tweet = unwrap_tweet_result((item.get("tweet_results") or {}).get("result"))
+                    if not tweet:
+                        continue
+                    normalized = normalize_candidate(tweet, handle, "logged_in_x_browser_graphql")
+                    if normalized["id"] in seen:
+                        continue
+                    seen.add(normalized["id"])
+                    candidates.append(normalized)
+                cursor = extract_bottom_cursor(entries)
+                if not cursor:
+                    break
+                page.wait_for_timeout(900)
+        except Exception as exc:
+            search_candidates, search_raw_pages = collect_search_candidates_via_subprocess(handle, browser_profile)
+            if not search_candidates:
+                raise exc
+            raw_pages.append({"source": "logged_in_x_browser_graphql", "fallback_reason": str(exc)})
+            raw_pages.extend(search_raw_pages)
+            return profile, search_candidates, raw_pages
+
+        candidates.sort(key=lambda item: item["created_at"], reverse=True)
+        return profile, candidates, raw_pages
+    finally:
+        context.close()
+        browser.close()
         p.stop()
 
 
@@ -849,20 +1065,40 @@ def main() -> None:
             break
         handle_dir = ensure_dir(paths["collection"] / slugify(target.handle))
         try:
-            profile, candidates, selected, excluded, raw_pages = collect_guest_candidates(session, ops, target.handle)
-            if len(selected) < 20 and authenticated_session is not None:
-                auth_candidates, auth_raw_pages = collect_authenticated_candidates(
-                    authenticated_session,
-                    ops,
-                    target.handle,
-                )
-                candidates, selected, excluded = merge_candidate_sets(
-                    candidates,
-                    selected,
-                    excluded,
-                    auth_candidates,
-                )
-                raw_pages.extend(auth_raw_pages)
+            if authenticated_session is not None:
+                try:
+                    profile, auth_candidates, auth_raw_pages = collect_authenticated_candidates_via_browser(
+                        ops["bearer_token"],
+                        ops,
+                        target.handle,
+                        args.headed,
+                        args.browser_profile,
+                    )
+                except Exception:
+                    profile = get_user(authenticated_session, ops, target.handle)
+                    auth_candidates, auth_raw_pages = collect_authenticated_candidates(
+                        authenticated_session,
+                        ops,
+                        target.handle,
+                    )
+                candidates, selected, excluded = merge_candidate_sets([], [], [], auth_candidates)
+                raw_pages = list(auth_raw_pages)
+                if len(selected) < 20:
+                    guest_profile, guest_candidates, guest_selected, guest_excluded, guest_raw_pages = collect_guest_candidates(
+                        session,
+                        ops,
+                        target.handle,
+                    )
+                    profile = guest_profile if not profile else profile
+                    candidates, selected, excluded = merge_candidate_sets(
+                        candidates,
+                        selected,
+                        excluded,
+                        guest_candidates,
+                    )
+                    raw_pages.extend(guest_raw_pages)
+            else:
+                profile, candidates, selected, excluded, raw_pages = collect_guest_candidates(session, ops, target.handle)
             profile_payload = {
                 "handle": target.handle,
                 "profile_url": target.profile_url,
