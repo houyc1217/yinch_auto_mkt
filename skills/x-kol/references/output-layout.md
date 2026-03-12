@@ -60,6 +60,7 @@ One row per included KOL:
 - engagement_rate
 - median_engagement_rate
 - cost_per_impression
+- usd_cpm
 - assessment
 
 ### `Details`

@@ -11,6 +11,7 @@ Use this skill when the user wants a reproducible X KOL workflow that:
 - accepts a list of X handles / profile URLs, or discovers KOLs by topic
 - saves all intermediate data under the user's current working directory
 - outputs a final XLSX with `Summary` and `Details` sheets
+- adds `usd_cpm`, calculated as USD cost per 1,000 impressions when a price is provided
 - uses a strict sample policy:
   - include only `article` and `post`
   - exclude `quote`, `note`, reply, retweet, and thread continuation
@@ -55,6 +56,7 @@ skills/x-kol/scripts/bootstrap_runtime.sh \
 Optional inputs:
 
 - `--targets-file <json>`: JSON list of strings or objects with `handle`, `profile_url`, and optional `price`
+  - when `price` is present, the skill normalizes supported currencies to USD using Google Finance rates fetched at execution time
 - `--count <n>`: desired KOL count in discovery mode
 - `--browser-profile <path>`: reuse a local Chrome profile for logged-in fallback
 - `--headed`: force headed browser flow for discovery and login fallback

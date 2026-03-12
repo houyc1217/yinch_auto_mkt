@@ -22,6 +22,7 @@ The target sample is exactly 20 valid posts per KOL.
 - `engagement = likes + retweets + replies`
 - `engagement_rate = engagement / impressions`
 - `cost_per_impression = normalized_price / average_impression`
+- `usd_cpm = normalized_price_usd / (average_impression / 1000)`
 
 Compute these from the final selected 20 posts only:
 
@@ -32,6 +33,19 @@ Compute these from the final selected 20 posts only:
 - engagement rate
 - median engagement rate
 - cost per impression
+- USD CPM
+
+## Price Normalization
+
+- If a target includes a `price`, normalize it to USD at execution time.
+- Use Google Finance as the FX source of truth for the run.
+- Supported currencies:
+  - USD / `$`
+  - EUR / `€`
+  - GBP / `£`
+  - RMB / CNY / CNH
+- `usd_cpm` should be formatted to 2 decimal places.
+- When multiple prices appear in one price label, use the lowest normalized USD amount for the summary-row CPM calculation.
 
 ## Fallback Order
 

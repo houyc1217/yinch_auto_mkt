@@ -99,6 +99,7 @@ SUMMARY_HEADERS = [
     "engagement_rate",
     "median_engagement_rate",
     "cost_per_impression",
+    "usd_cpm",
     "assessment",
 ]
 DETAIL_HEADERS = [
@@ -177,6 +178,82 @@ def parse_price(label: Optional[str]) -> Tuple[float, str]:
     if vals:
         return min(vals), "RMB "
     return 0.0, ""
+
+
+def extract_price_points(label: Optional[str]) -> List[Tuple[float, str]]:
+    label = label or ""
+    points: List[Tuple[float, str]] = []
+    for value in re.findall(r"\$([0-9]+(?:\.[0-9]+)?)", label):
+        points.append((float(value), "USD"))
+    for value in re.findall(r"€([0-9]+(?:\.[0-9]+)?)", label):
+        points.append((float(value), "EUR"))
+    for value in re.findall(r"£([0-9]+(?:\.[0-9]+)?)", label):
+        points.append((float(value), "GBP"))
+    for value in re.findall(r"([0-9]+(?:\.[0-9]+)?)\s*(?:USD|USDT|dollars?)", label, flags=re.I):
+        points.append((float(value), "USD"))
+    for value in re.findall(r"([0-9]+(?:\.[0-9]+)?)\s*(?:EUR)", label, flags=re.I):
+        points.append((float(value), "EUR"))
+    for value in re.findall(r"([0-9]+(?:\.[0-9]+)?)\s*(?:GBP)", label, flags=re.I):
+        points.append((float(value), "GBP"))
+    for value in re.findall(r"([0-9]+(?:\.[0-9]+)?)\s*(?:RMB|CNY|CNH)", label, flags=re.I):
+        points.append((float(value), "CNY"))
+    return points
+
+
+def fetch_google_finance_rate(page: Any, pair: str) -> float:
+    page.goto(f"https://www.google.com/finance/quote/{pair}?hl=en", wait_until="domcontentloaded", timeout=60000)
+    page.wait_for_timeout(1200)
+    try:
+        page.get_by_role("button", name="Reject all").first.click(timeout=2500)
+        page.wait_for_timeout(1200)
+    except Exception:
+        pass
+    text = page.locator("body").inner_text(timeout=10000)
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    marker = {
+        "EUR-USD": "EUR / USD • CURRENCY",
+        "GBP-USD": "GBP / USD • CURRENCY",
+        "USD-CNY": "USD / CNY • CURRENCY",
+    }[pair]
+    if marker not in lines:
+        raise SkillError(f"Could not find Google Finance quote marker for {pair}")
+    idx = lines.index(marker)
+    for offset in range(idx + 1, min(idx + 8, len(lines))):
+        candidate = lines[offset].replace(",", "")
+        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", candidate):
+            return float(candidate)
+    raise SkillError(f"Could not parse Google Finance quote for {pair}")
+
+
+def fetch_fx_rates_to_usd() -> Dict[str, float]:
+    if sync_playwright is None:
+        raise SkillError("playwright is required to fetch Google Finance FX rates")
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        try:
+            eur_usd = fetch_google_finance_rate(page, "EUR-USD")
+            gbp_usd = fetch_google_finance_rate(page, "GBP-USD")
+            usd_cny = fetch_google_finance_rate(page, "USD-CNY")
+        finally:
+            browser.close()
+    return {
+        "USD": 1.0,
+        "EUR": eur_usd,
+        "GBP": gbp_usd,
+        "CNY": 1.0 / usd_cny if usd_cny else 0.0,
+    }
+
+
+def normalize_price_to_usd(label: Optional[str], fx_rates_to_usd: Dict[str, float]) -> Optional[float]:
+    values_usd: List[float] = []
+    for amount, currency in extract_price_points(label):
+        rate = fx_rates_to_usd.get(currency)
+        if rate:
+            values_usd.append(amount * rate)
+    if not values_usd:
+        return None
+    return min(values_usd)
 
 
 def normalize_handle(value: str) -> str:
@@ -621,7 +698,15 @@ def discover_targets(topic: str, count: int, headed: bool, browser_profile: Opti
     return normalize_targets(discovered)
 
 
-def summarize_posts(posts: List[Dict[str, Any]], followers: int, price: Optional[str], product_context: str, bio: str, source_used: str) -> Dict[str, Any]:
+def summarize_posts(
+    posts: List[Dict[str, Any]],
+    followers: int,
+    price: Optional[str],
+    product_context: str,
+    bio: str,
+    source_used: str,
+    fx_rates_to_usd: Optional[Dict[str, float]] = None,
+) -> Dict[str, Any]:
     impressions = [item["impressions"] for item in posts]
     engagements = [item["engagement"] for item in posts]
     rates = [item["engagement_rate"] for item in posts if item["engagement_rate"] is not None]
@@ -633,6 +718,8 @@ def summarize_posts(posts: List[Dict[str, Any]], followers: int, price: Optional
     median_engagement_rate = round(statistics.median(rates), 4) if rates else 0.0
     price_value, price_currency = parse_price(price)
     cost_per_impression = round(price_value / average_impression, 6) if price_value and average_impression else None
+    price_usd = normalize_price_to_usd(price, fx_rates_to_usd or {}) if price else None
+    usd_cpm = round(price_usd / (average_impression / 1000), 2) if price_usd and average_impression else None
     fit_score = "Medium"
     combined_text = " ".join(item["text_preview"].lower() for item in posts)
     ctx = product_context.lower()
@@ -654,6 +741,7 @@ def summarize_posts(posts: List[Dict[str, Any]], followers: int, price: Optional
         "engagement_rate": engagement_rate,
         "median_engagement_rate": round(median_engagement_rate, 4),
         "cost_per_impression": f"{price_currency}{cost_per_impression:.6f}" if cost_per_impression is not None else "",
+        "usd_cpm": f"{usd_cpm:.2f}" if usd_cpm is not None else "",
         "assessment": assessment,
     }
 
@@ -745,6 +833,14 @@ def main() -> None:
     detail_rows: List[Dict[str, Any]] = []
     omitted: List[Dict[str, Any]] = []
     included = 0
+    fx_rates_to_usd: Dict[str, float] = {}
+    if any(target.price for target in targets):
+        fx_rates_to_usd = fetch_fx_rates_to_usd()
+        run_context_path = paths["environment"] / "run_context.json"
+        run_context = json.loads(run_context_path.read_text())
+        run_context["fx_source"] = "Google Finance"
+        run_context["fx_rates_to_usd"] = {key: round(value, 6) for key, value in fx_rates_to_usd.items()}
+        write_json(run_context_path, run_context)
 
     for target in targets:
         if args.mode == "discovery" and included >= args.count:
@@ -789,6 +885,7 @@ def main() -> None:
                 product_context=args.product_context,
                 bio=profile_payload["bio"],
                 source_used="+".join(sorted({row["source_used"] for row in selected})) if selected else "guest_public_graphql",
+                fx_rates_to_usd=fx_rates_to_usd,
             )
             summary_row = {
                 "handle": target.handle,
