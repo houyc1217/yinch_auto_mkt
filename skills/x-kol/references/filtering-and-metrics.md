@@ -7,6 +7,12 @@ Only count posts whose normalized `post_type` is:
 - `article`
 - `post`
 
+Additionally:
+
+- sort valid candidates by `created_at` from newest to oldest
+- take the newest 20 valid items
+- count the first post of a thread as a valid `post`
+
 Always exclude:
 
 - `quote`

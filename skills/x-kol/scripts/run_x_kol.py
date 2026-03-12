@@ -515,6 +515,7 @@ def collect_guest_candidates(
             break
         time.sleep(1)
 
+    selected.sort(key=lambda item: item["created_at"], reverse=True)
     return profile, candidates, selected[:20], excluded, raw_pages
 
 
@@ -612,6 +613,7 @@ def collect_authenticated_candidates(
         if not cursor:
             break
         time.sleep(1)
+    candidates.sort(key=lambda item: item["created_at"], reverse=True)
     return candidates, raw_pages
 
 

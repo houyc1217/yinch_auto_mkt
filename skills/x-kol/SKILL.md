@@ -13,8 +13,10 @@ Use this skill when the user wants a reproducible X KOL workflow that:
 - outputs a final XLSX with `Summary` and `Details` sheets
 - adds `usd_cpm`, calculated as USD cost per 1,000 impressions when a price is provided
 - uses a strict sample policy:
-  - include only `article` and `post`
-  - exclude `quote`, `note`, reply, retweet, and thread continuation
+  - sort valid candidates from newest to oldest
+  - take the newest 20 valid items
+  - count `article`, `post`, and the first post of a thread
+  - exclude `quote`, `note`, reply, retweet, and thread continuation after the thread's first post
 
 Never store credentials, cookies, bearer tokens, auth headers, or machine-specific secret paths in repo files or output artifacts.
 
